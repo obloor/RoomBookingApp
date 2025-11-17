@@ -1,0 +1,133 @@
+
+.w-100 {
+    width: 100% !important;
+}
+
+.row {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: calc(-1 * var(--bs-gutter-y));
+    margin-right: calc(-0.5 * var(--bs-gutter-x));
+    margin-left: calc(-0.5 * var(--bs-gutter-x));
+    justify-content: center;
+}
+
+.row > * {
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 100%;
+    padding-right: calc(var(--bs-gutter-x) * 0.5);
+    padding-left: calc(var(--bs-gutter-x) * 0.5);
+    margin-top: var(--bs-gutter-y);
+}
+
+/* Room Card Hover Effects */
+.room-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 10px !important;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.room-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+
+.room-image {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.room-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.3) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.room-card:hover .room-image::before {
+    opacity: 1;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .room-card {
+        margin-bottom: 1.5rem;
+        max-width: 100%;
+    }
+    
+    .row > * {
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+    
+    .container {
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+}
+
+.col-xs-12, .col-md-6, .col-lg-4 {
+    flex: 0 0 auto;
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .col-md-6 {
+        flex: 0 0 auto;
+        width: 50%;
+    }
+}
+
+@media (min-width: 992px) {
+    .col-lg-4 {
+        flex: 0 0 auto;
+        width: 33.33333333%;
+    }
+}
+
+.badge {
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.btn-outline-primary {
+    transition: all 0.3s ease;
+    border-width: 2px;
+    font-weight: 500;
+}
+
+.btn-outline-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(13, 110, 253, 0.2);
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
