@@ -1,89 +1,65 @@
 import axios from 'axios';
 import { BaseUrl } from '../constant';
 
-const API_URL = `${BaseUrl}/api/reservations/`;
-
+// Create one API client just for authenticated booking endpoints
 const api = axios.create({
-  baseURL: BaseUrl,
+  baseURL: `${BaseUrl}/api`,
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
   },
-  withCredentials: true,
 });
 
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+// Attach access token before every request
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
 
-api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
-
-    if (!error.response || error.response.status !== 401 || originalRequest._retry) {
-      return Promise.reject(error);
-    }
-
-    originalRequest._retry = true;
-
-    try {
-      const refreshToken = localStorage.getItem('refresh_token');
-      if (!refreshToken) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('refresh_token');
-        localStorage.removeItem('user');
-        window.location.href = '/login';
-        return Promise.reject(error);
-      }
-
-      const response = await axios.post(`${BaseUrl}/api/auth/jwt/refresh/`, {
-        refresh: refreshToken,
-      });
-
-      const { access } = response.data;
-
-      localStorage.setItem('token', access);
-
-      originalRequest.headers.Authorization = `Bearer ${access}`;
-
-      return api(originalRequest);
-    } catch (refreshError) {
-      console.error('Token refresh failed:', refreshError);
-      localStorage.removeItem('token');
-      localStorage.removeItem('refresh_token');
-      localStorage.removeItem('user');
-      window.location.href = '/login';
-      return Promise.reject(refreshError);
-    }
+  // Only attach if it's a real token
+  if (token && token.trim() !== "" && token !== "null" && token !== "undefined") {
+    config.headers.Authorization = `Bearer ${token}`;
+  } else {
+    // If token doesn't exist, remove header completely
+    delete config.headers.Authorization;
   }
-);
+
+  return config;
+});
 
 
-const createBooking = async (bookingData) => {
-  const response = await api.post('/api/reservations/', bookingData);
-  return response.data;
+// Create a new reservation
+const createBooking = async (data) => {
+  const res = await api.post('/reservations/', data);
+  return res.data;
 };
 
+// All reservations for current logged-in user
 const getBookings = async () => {
-  const response = await api.get('/api/reservations/');
-  return response.data;
+  const res = await api.get('/reservations/');
+  return res.data;
 };
 
+// Fetch a single reservation by ID
+const getBooking = async (id) => {
+  const res = await api.get(`/reservations/${id}/`);
+  return res.data;
+};
+
+// Update a reservation (PATCH = partial update)
+const updateBooking = async (id, data) => {
+  const res = await api.patch(`/reservations/${id}/`, data);
+  return res.data;
+};
+
+// Delete a specific reservation
 const deleteBooking = async (id) => {
-  const response = await api.delete(`/api/reservations/${id}/`);
-  return response.data;
+  const res = await api.delete(`/reservations/${id}/`);
+  return res.data;
 };
 
 export default {
   createBooking,
   getBookings,
+  getBooking,
+  updateBooking,
   deleteBooking,
 };

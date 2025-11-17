@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Button, Card, Spinner, Alert, Container, Row, Col } from 'react-bootstrap';
+import { Button, Card, Spinner, Container, Row, Col, Alert } from 'react-bootstrap';
 import { FaArrowLeft, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
-import 'react-datepicker/dist/react-datepicker.css';
 import roomService from '../api/roomService';
 
 function MakeReservation() {
   const location = useLocation();
   const navigate = useNavigate();
+
+  // Pull roomId from either state
   const roomIdFromUrl = new URLSearchParams(location.search).get('roomId');
 
   const [formData, setFormData] = useState({
@@ -15,7 +16,7 @@ function MakeReservation() {
     start_date: location.state?.startDate ? new Date(location.state.startDate) : new Date(),
     end_date: location.state?.endDate
       ? new Date(location.state.endDate)
-      : new Date(new Date().setDate(new Date().getDate() + 1)),
+      : new Date(Date.now() + 86400000), // default next-day end
     guests: 1,
     special_requests: '',
   });
@@ -26,6 +27,7 @@ function MakeReservation() {
   const [error, setError] = useState('');
   const [isAvailable, setIsAvailable] = useState(null);
 
+  // Load available rooms whenever user changes date or guest count
   useEffect(() => {
     const fetchRooms = async () => {
       try {
@@ -35,26 +37,31 @@ function MakeReservation() {
           end_date: formData.end_date.toISOString().split('T')[0],
           capacity: formData.guests,
         });
+
         setRooms(res.data);
 
+        // Find the selected room inside the available results
         const found = res.data.find(r => r.id.toString() === formData.room.toString());
+
         setSelectedRoom(found || null);
+        setIsAvailable(!!found);
+
       } catch {
         setError('Failed to load available rooms. Please try again.');
       } finally {
         setLoading(false);
       }
     };
+
     fetchRooms();
   }, [formData.start_date, formData.end_date, formData.guests]);
 
 
-
-
+  // If initial load is happening with no data yet
   if (loading && rooms.length === 0) {
     return (
       <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}>
-        <Spinner animation="border" role="status"><span className="visually-hidden">Loading...</span></Spinner>
+        <Spinner animation="border" />
       </Container>
     );
   }
@@ -64,11 +71,10 @@ function MakeReservation() {
       <Button variant="outline-secondary" className="mb-4" onClick={() => navigate(-1)}>
         <FaArrowLeft className="me-2" /> Back to Rooms
       </Button>
-
+      {error && <Alert variant="danger">{error}</Alert>}
       <Row className="g-4">
         <Col lg={8}>
         </Col>
-
         <Col lg={4}>
           <Card className="shadow-sm">
             <Card.Header className="bg-white"><h5>Booking Summary</h5></Card.Header>
@@ -77,15 +83,28 @@ function MakeReservation() {
                 <>
                   <h6>{selectedRoom.name}</h6>
                   <p className="text-muted">{selectedRoom.description}</p>
-                  <div className="d-flex justify-content-between"><span>Total:</span><strong>${calculateTotal()}</strong></div>
+                  <div className="d-flex justify-content-between">
+                    <span>Total:</span>
+                    <strong>${calculateTotal()}</strong>
+                  </div>
                   {isAvailable !== null && (
-                    <div className={`alert ${isAvailable ? 'alert-success' : 'alert-warning'} d-flex align-items-center mt-3`}>
-                      {isAvailable ? <FaCheckCircle className="me-2" /> : <FaTimesCircle className="me-2" />}
+                    <div
+                      className={`alert ${
+                        isAvailable ? 'alert-success' : 'alert-warning'
+                      } d-flex align-items-center mt-3`}
+                    >
+                      {isAvailable ? (
+                        <FaCheckCircle className="me-2" />
+                      ) : (
+                        <FaTimesCircle className="me-2" />
+                      )}
                       {isAvailable ? 'Room available' : 'Room unavailable'}
                     </div>
                   )}
                 </>
-              ) : <p className="text-muted text-center">Select a room to see booking details</p>}
+              ) : (
+                <p className="text-muted text-center">Select a room to see booking details</p>
+              )}
             </Card.Body>
           </Card>
         </Col>

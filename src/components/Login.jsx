@@ -14,6 +14,7 @@ function Login() {
   const location = useLocation();
   const from = location.state?.from?.pathname || '/';
 
+  // Form validation
   const validateForm = () => {
     const newErrors = {};
     if (!formData.username.trim()) newErrors.username = 'Username is required';
@@ -22,12 +23,14 @@ function Login() {
     return Object.keys(newErrors).length === 0;
   };
 
+  // Handle input change
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     if (errors[name]) setErrors(prev => ({ ...prev, [name]: null }));
   };
 
+  // Handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -36,6 +39,7 @@ function Login() {
     if (result.success) navigate(from, { replace: true });
   };
 
+  // UI Layout
   return (
     <Container className="d-flex justify-content-center align-items-center min-vh-100">
       <Card className="shadow-sm" style={{ width: '100%', maxWidth: '400px' }}>

@@ -1,26 +1,20 @@
-
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Logout() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        const logout = async () => {
-            try {
-                //
-            } finally {
-                localStorage.removeItem('token');
-                localStorage.removeItem('refresh_token');
-                localStorage.removeItem('user');
-                navigate('/login');
-            }
-        };
+  useEffect(() => {
+    // Clear everything
+    localStorage.removeItem("token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("user");
 
-        logout();
-    }, [navigate]);
+    // Redirect
+    navigate("/login");
+  }, [navigate]);
 
-    return null;
+  return null;
 }
 
 export default Logout;

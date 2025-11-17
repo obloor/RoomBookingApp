@@ -28,7 +28,6 @@ function App() {
             <Route path="/rooms/:id" element={<RoomDetail />} />
             <Route path="/my-reservations" element={<MyReservations />} />
             <Route path="/make-reservation" element={<MakeReservation />} />
-
             <Route path="/reservations/:id/edit" element={<EditReservation />} />
           </Routes>
         </main>

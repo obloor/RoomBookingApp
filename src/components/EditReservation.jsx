@@ -18,11 +18,11 @@ function EditReservation() {
   const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
 
+  // Load Reservation on page load
   useEffect(() => {
     const load = async () => {
       try {
         const data = await roomService.getReservation(id);
-
         setReservation(data);
         setTitle(data.title);
         setNotes(data.notes || "");
@@ -39,6 +39,7 @@ function EditReservation() {
     load();
   }, [id]);
 
+  // Update function
   const save = async () => {
     const payload = {
       title,
@@ -59,7 +60,7 @@ function EditReservation() {
 
   if (loading) return <Spinner className="my-5" />;
   if (!reservation) return <Alert variant="danger">Not found.</Alert>;
-
+    // UI form
   return (
     <Container className="my-4">
       <Card>

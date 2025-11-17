@@ -6,12 +6,17 @@ import { useAuth } from "../hooks/useAuth";
 import roomService from "../api/roomService";
 
 function MyReservations() {
+  // Store reservations returned from backend
   const [reservations, setReservations] = useState([]);
+
+  // UI states
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
   const { user } = useAuth();
 
   useEffect(() => {
+    // Load user's reservations
     const load = async () => {
       try {
         const data = await roomService.getUserReservations();
@@ -26,17 +31,20 @@ function MyReservations() {
     load();
   }, []);
 
+  // Cancel reservation
   const cancelReservation = async (id) => {
     if (!window.confirm("Cancel this reservation?")) return;
 
     try {
       await roomService.deleteReservation(id);
+      // Remove cancelled reservation from state
       setReservations((prev) => prev.filter((r) => r.id !== id));
     } catch {
       setError("Failed to cancel");
     }
   };
 
+  // Loading + error states
   if (loading) return <Spinner className="my-5" />;
   if (error) return <Alert variant="danger">{error}</Alert>;
 
@@ -73,7 +81,6 @@ function MyReservations() {
                 >
                   Edit
                 </Link>
-
                 <Button
                   variant="outline-danger"
                   size="sm"
