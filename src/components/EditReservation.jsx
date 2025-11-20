@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import { Container, Card, Form, Button, Spinner, Alert } from "react-bootstrap";
-import roomService from "../api/roomService";
+import bookingService from "../api/bookingService";
 import { toast } from "react-toastify";
 
 function EditReservation() {
@@ -22,14 +22,15 @@ function EditReservation() {
   useEffect(() => {
     const load = async () => {
       try {
-        const data = await roomService.getReservation(id);
+        const data = await bookingService.getBooking(id);
         setReservation(data);
-        setTitle(data.title);
+        setTitle(data.title || "");
         setNotes(data.notes || "");
         setAttendees(data.attendees);
         setStartTime(new Date(data.start_time));
         setEndTime(new Date(data.end_time));
-      } catch {
+      } catch (e) {
+        console.error(e);
         toast.error("Failed to load reservation");
       } finally {
         setLoading(false);
@@ -40,27 +41,37 @@ function EditReservation() {
   }, [id]);
 
   // Update function
-  const save = async () => {
-    const payload = {
-      title,
-      notes,
-      attendees,
-      start_time: startTime.toISOString(),
-      end_time: endTime.toISOString(),
-    };
+const save = async () => {
 
-    try {
-      await roomService.updateReservation(id, payload);
-      toast.success("Updated!");
-      navigate("/my-reservations");
-    } catch {
-      toast.error("Failed to update");
-    }
+  const payload = {
+    title,
+    notes,
+    attendees,
+    start_time: startTime.toISOString(),
+    end_time: endTime.toISOString(),
+    room_id: reservation.room.id,
   };
+
+  try {
+    await bookingService.updateBooking(id, payload);
+    toast.success("Updated!");
+    navigate("/my-reservations");
+  } catch (err) {
+    console.error("Full error:", err.response?.data);
+
+    let msg = "Failed to update.";
+    if (err.response?.data) {
+      const first = Object.values(err.response.data)[0];
+      msg = Array.isArray(first) ? first[0] : first;
+    }
+    toast.error(msg);
+  }
+};
+
 
   if (loading) return <Spinner className="my-5" />;
   if (!reservation) return <Alert variant="danger">Not found.</Alert>;
-    // UI form
+
   return (
     <Container className="my-4">
       <Card>

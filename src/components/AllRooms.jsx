@@ -98,10 +98,11 @@ function AllRooms() {
                             <Card className="h-100 room-card shadow-sm border-0 overflow-hidden">
                                 <div className="position-relative">
                                     <div className="room-image" style={{
-                                        backgroundImage: `url('https://source.unsplash.com/random/600x400/?meeting-room,${room.id}')`,
+                                        backgroundImage: `url(https://images.pexels.com/photos/${(room.id % 30) + 1}600/pexels-photo-${(room.id % 30) + 1}600.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop&crop=center`,
                                         height: '200px',
                                         backgroundSize: 'cover',
-                                        backgroundPosition: 'center'
+                                        backgroundPosition: 'center',
+                                        backgroundColor: '#f0f0f0',
                                     }}>
                                         <div className="position-absolute top-0 end-0 m-3">
                                             <Badge bg={room.is_available ? 'success' : 'danger'} className="px-3 py-2">

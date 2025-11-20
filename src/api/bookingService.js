@@ -14,11 +14,9 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
 
-  // Only attach if it's a real token
   if (token && token.trim() !== "" && token !== "null" && token !== "undefined") {
     config.headers.Authorization = `Bearer ${token}`;
   } else {
-    // If token doesn't exist, remove header completely
     delete config.headers.Authorization;
   }
 
@@ -44,7 +42,7 @@ const getBooking = async (id) => {
   return res.data;
 };
 
-// Update a reservation (PATCH = partial update)
+// Update a reservation
 const updateBooking = async (id, data) => {
   const res = await api.patch(`/reservations/${id}/`, data);
   return res.data;
