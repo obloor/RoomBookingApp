@@ -24,47 +24,46 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// All API calls grouped here
 export default {
   // List all rooms
   getAllRooms: async () => {
-    const res = await api.get('/api/rooms/');
+    const res = await api.get('/rooms/');  // Removed /api
     return res.data;
   },
 
   // Single room details
   getRoom: async (id) => {
-    const res = await api.get(`/api/rooms/${id}/`);
+    const res = await api.get(`/rooms/${id}/`);  // Removed /api
     return res.data;
   },
 
   // Create reservation
   createReservation: async (data) => {
-    const res = await api.post('/api/reservations/', data);
+    const res = await api.post('/reservations/', data);  // Removed /api
     return res.data;
   },
 
   // Delete reservation
   deleteReservation: async (id) => {
-    const res = await api.delete(`/api/reservations/${id}/`);
+    const res = await api.delete(`/reservations/${id}/`);  // Removed /api
     return res.data;
   },
 
   // Get one reservation
   getReservation: async (id) => {
-    const res = await api.get(`/api/reservations/${id}/`);
+    const res = await api.get(`/reservations/${id}/`);  // Removed /api
     return res.data;
   },
 
   // Update reservation
   updateReservation: async (id, data) => {
-    const res = await api.patch(`/api/reservations/${id}/`, data);
+    const res = await api.patch(`/reservations/${id}/`, data);  // Removed /api
     return res.data;
   },
 
   // All reservations for current user
   getUserReservations: async () => {
-    const res = await api.get(`/api/reservations/`);
+    const res = await api.get(`/reservations/`);  // Removed /api
     return res.data;
   }
 };
