@@ -80,14 +80,12 @@ function MakeReservation() {
 
         try {
             const payload = {
-                room_id: Number(formData.room),
+                room: Number(formData.room),
                 start_time: formatForDjango(formData.start_date),
                 end_time: formatForDjango(formData.end_date),
                 attendees: formData.guests,
                 notes: formData.special_requests,
-
             };
-
 
             await bookingService.createBooking(payload);
             navigate("/my-reservations");
