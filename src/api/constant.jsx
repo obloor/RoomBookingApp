@@ -1,35 +1,41 @@
-// Base URL for API requests
+// Base backend URL
 export const BaseUrl = "https://reservation-app-sepia.vercel.app";
 
-// API Endpoints
+// Complete API endpoints
 export const API_ENDPOINTS = {
-  ROOMS: {
-    BASE: "/api/rooms/",
-  },
   AUTH: {
     LOGIN: "/api/auth/jwt/create/",
     REFRESH: "/api/auth/jwt/refresh/",
     REGISTER: "/api/register/",
     ME: "/api/users/me/",
+  },
+
+  ROOMS: {
+    BASE: "/api/rooms/",
+    AVAILABILITY: "/api/rooms/availability/",
+  },
+
+  BOOKINGS: {
+    BASE: "/api/reservations/",
+    MY_BOOKINGS: "/api/reservations/my/",
   }
 };
 
-
-// Meeting room features
+// Features + capacities
 export const ROOM_FEATURES = [
-  'Projector',
-  'Whiteboard',
-  'Video Conferencing',
-  'Teleconferencing',
-  'Coffee Machine',
-  'Catering Available',
-  'Wheelchair Accessible',
+  "Projector",
+  "Whiteboard",
+  "Video Conferencing",
+  "Teleconferencing",
+  "Coffee Machine",
+  "Catering Available",
+  "Wheelchair Accessible",
 ];
 
 export const ROOM_CAPACITIES = [
-  { value: 2, label: '2 people' },
-  { value: 4, label: '4 people' },
-  { value: 6, label: '6 people' },
-  { value: 8, label: '8 people' },
-  { value: 10, label: '10+ people' },
+  { value: 2, label: "2 people" },
+  { value: 4, label: "4 people" },
+  { value: 6, label: "6 people" },
+  { value: 8, label: "8 people" },
+  { value: 10, label: "10+ people" },
 ];
