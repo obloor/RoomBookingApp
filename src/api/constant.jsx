@@ -1,25 +1,22 @@
-// Base backend URL
+// Base URL for API requests
 export const BaseUrl = "https://reservation-app-sepia.vercel.app";
 
-// Complete API endpoints
+// API Endpoints
 export const API_ENDPOINTS = {
+  ROOMS: {
+    BASE: "/api/rooms/",
+  },
+  RESERVATIONS: {
+    BASE: "/api/reservations/",
+  },
   AUTH: {
     LOGIN: "/api/auth/jwt/create/",
     REFRESH: "/api/auth/jwt/refresh/",
     REGISTER: "/api/register/",
     ME: "/api/users/me/",
-  },
-
-  ROOMS: {
-    BASE: "/api/rooms/",
-    AVAILABILITY: "/api/rooms/availability/",
-  },
-
-  BOOKINGS: {
-    BASE: "/api/reservations/",
-    MY_BOOKINGS: "/api/reservations/my/",
   }
 };
+
 
 // Features + capacities
 export const ROOM_FEATURES = [
