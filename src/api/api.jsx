@@ -2,6 +2,7 @@
 import axios from 'axios';
 import { BaseUrl, API_ENDPOINTS } from './constant';
 
+
 // Single axios instance for the entire application
 export const api = axios.create({
   baseURL: BaseUrl,
