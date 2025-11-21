@@ -1,5 +1,5 @@
 // Base URL for API requests
-//export const BaseUrl = 'http://localhost:8000';
+export const BaseUrl = "https://reservation-app-sepia.vercel.app";
 
 // API Endpoints
 export const API_ENDPOINTS = {
@@ -37,10 +37,3 @@ export const ROOM_CAPACITIES = [
   { value: 8, label: '8 people' },
   { value: 10, label: '10+ people' },
 ];
-
-export default {
-  BaseUrl,
-  API_ENDPOINTS,
-  ROOM_FEATURES,
-  ROOM_CAPACITIES,
-};

@@ -1,6 +1,6 @@
 // src/api/roomService.js
 import axios from 'axios';
-import { BaseUrl } from '../constants';
+import { BaseUrl, API_ENDPOINTS } from './constant';
 
 const api = axios.create({
   baseURL: BaseUrl,

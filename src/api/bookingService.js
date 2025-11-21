@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { BaseUrl } from '../constant';
+import { BaseUrl, API_ENDPOINTS } from './constant';
 
 // Create one API client just for authenticated booking endpoints
 const api = axios.create({

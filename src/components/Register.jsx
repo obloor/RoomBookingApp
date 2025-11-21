@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import { BaseUrl } from '../constant';
+import { BaseUrl, API_ENDPOINTS } from '../api/constant';
 import './Login.css';
 
 function Register() {

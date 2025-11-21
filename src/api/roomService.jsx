@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { BaseUrl } from '../constant';
+import { BaseUrl, API_ENDPOINTS } from './constant';
 
 // Main API config
 const api = axios.create({
