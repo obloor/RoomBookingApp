@@ -1,5 +1,5 @@
 // Base URL for API requests
-export const BaseUrl = 'http://localhost:8000';
+//export const BaseUrl = 'http://localhost:8000';
 
 // API Endpoints
 export const API_ENDPOINTS = {
