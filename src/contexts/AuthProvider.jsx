@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // --- Fetch current user data ---
+  // Fetch current user data
   const fetchUserData = useCallback(async () => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -54,15 +54,13 @@ export const AuthProvider = ({ children }) => {
         return userData;
       }
 
-      // If we get here, the user endpoint failed but we still have a valid token
+      // user endpoint failed but we still have a valid token
       console.warn('User profile endpoint failed, continuing with minimal auth', {
         status: response.status,
         statusText: response.statusText,
         data: response.data
       });
 
-      // Create a minimal user object from the token
-      // This is a fallback - the token might contain some basic user info
       const tokenParts = token.split('.');
       if (tokenParts.length === 3) {
         try {
@@ -91,7 +89,7 @@ export const AuthProvider = ({ children }) => {
         data: err.response?.data
       });
       
-      // Don't clear tokens on 500 errors - the auth might still be valid
+      // Dont clear tokens on 500 errors - the auth might still be valid
       if (err.response?.status === 401) {
         console.warn('Authentication failed - clearing tokens');
         localStorage.removeItem('token');
@@ -112,7 +110,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // --- Initialize authentication on app load ---
+  // Initialize authentication on app load
   useEffect(() => {
     const initializeAuth = async () => {
       const token = localStorage.getItem('token');
@@ -176,9 +174,6 @@ export const AuthProvider = ({ children }) => {
       let errorMessage = 'Login failed. Please check your credentials.';
       
       if (err.response) {
-        // Server responded with error status (4xx, 5xx)
-        
-        // Handle specific error statuses
         if (err.response.status === 401) {
           errorMessage = 'Invalid username or password';
         } else if (err.response.data?.detail) {
@@ -206,13 +201,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // --- Register ---
+  // Register
   const register = async (userData) => {
     try {
       setError(null);
       setLoading(true);
-      
-      // Remove any leading slashes from the endpoint to prevent double slashes
+
       const registerEndpoint = API_ENDPOINTS.AUTH.REGISTER.replace(/^\/+/, '');
       const registerUrl = `${BaseUrl}/${registerEndpoint}`;
       
@@ -254,7 +248,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // --- Logout ---
+  // Logout
   const logout = useCallback(() => {
     localStorage.removeItem('token');
     localStorage.removeItem('refresh_token');
@@ -264,13 +258,12 @@ export const AuthProvider = ({ children }) => {
     navigate('/login');
   }, [navigate]);
 
-  // --- Helper methods ---
   const isAuthenticated = useCallback(() => !!currentUser, [currentUser]);
   const isAdmin = useCallback(() => currentUser?.is_staff || false, [currentUser]);
 
-  // --- Context value ---
+  // Context value
   const value = {
-    user: currentUser,             // ✅ for Navbar.jsx compatibility
+    user: currentUser,
     currentUser,
     isAuthenticated,
     isAdmin,
@@ -282,7 +275,7 @@ export const AuthProvider = ({ children }) => {
     fetchUserData,
   };
 
-  // --- Loader while initializing auth ---
+  // Loader while initializing auth
   return (
     <AuthContext.Provider value={value}>
       {loading ? (
