@@ -2,7 +2,9 @@ import { useState, useCallback, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
-import { BaseUrl, API_ENDPOINTS } from '../api/constant';
+
+import { BaseUrl } from "../api/constant.jsx";
+
 
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
