@@ -5,7 +5,8 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 import roomService from '../api/roomService';
-import bookingService from '../api/bookingService';
+import { bookingService } from "../api/bookingService";
+
 import { useAuth } from '../hooks/useAuth';
 import { toast } from 'react-toastify';
 

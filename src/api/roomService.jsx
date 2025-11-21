@@ -2,7 +2,6 @@ import { api } from './api';
 import { API_ENDPOINTS } from './constant';
 
 export const roomService = {
-  // List all rooms
   getAllRooms: async () => {
     const res = await api.get(API_ENDPOINTS.ROOMS.BASE);
     return res.data;
