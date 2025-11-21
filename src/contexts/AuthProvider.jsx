@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
+import { API_ENDPOINTS } from "../api/constant.jsx";
 
 import { BaseUrl } from "../api/constant.jsx";
 
@@ -143,7 +144,7 @@ export const AuthProvider = ({ children }) => {
       setError(null);
       setLoading(true);
 
-      const loginUrl = `${BaseUrl}${API_ENDPOINTS.AUTH.LOGIN}`;
+      const loginUrl = `${BaseUrl}${API_ENDPOINTS.AUTH.LOGIN.replace('/api', '')}`;
       const response = await axios.post(loginUrl, { username, password });
       
       if (!response?.data?.access || !response?.data?.refresh) {
