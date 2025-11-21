@@ -1,124 +1,131 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import DatePicker from "react-datepicker";
-import { Container, Card, Form, Button, Spinner, Alert } from "react-bootstrap";
-import { bookingService } from "../api/bookingService.js";
-import { toast } from "react-toastify";
+import roomService from "../api/roomService";
+import { formatISO } from "date-fns";
 
 function EditReservation() {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [reservation, setReservation] = useState(null);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const [title, setTitle] = useState("");
-  const [notes, setNotes] = useState("");
-  const [attendees, setAttendees] = useState(1);
-  const [startTime, setStartTime] = useState(new Date());
-  const [endTime, setEndTime] = useState(new Date());
+  const [formData, setFormData] = useState({
+    start_time: "",
+    end_time: "",
+    notes: "",
+    attendees: 1,
+  });
 
-  // Load Reservation on page load
+  // Load reservation on mount
   useEffect(() => {
-    const load = async () => {
+    const loadReservation = async () => {
       try {
-        const data = await bookingService.getBooking(id);
+        const data = await roomService.getReservation(id);
         setReservation(data);
-        setTitle(data.title || "");
-        setNotes(data.notes || "");
-        setAttendees(data.attendees);
-        setStartTime(new Date(data.start_time));
-        setEndTime(new Date(data.end_time));
-      } catch (e) {
-        console.error(e);
-        toast.error("Failed to load reservation");
+
+        // Pre-fill form
+        setFormData({
+          start_time: data.start_time.slice(0, 16),
+          end_time: data.end_time.slice(0, 16),
+          notes: data.notes || "",
+          attendees: data.attendees,
+        });
+      } catch (err) {
+        setError("Failed to load reservation");
       } finally {
         setLoading(false);
       }
     };
 
-    load();
+    loadReservation();
   }, [id]);
 
-  // Update function
-const save = async () => {
+  const updateReservation = async (e) => {
+    e.preventDefault();
 
-  const payload = {
-    title,
-    notes,
-    attendees,
-    start_time: startTime.toISOString(),
-    end_time: endTime.toISOString(),
-    room_id: reservation.room.id,
+    try {
+      await roomService.updateReservation(id, {
+        start_time: formatISO(new Date(formData.start_time)),
+        end_time: formatISO(new Date(formData.end_time)),
+        notes: formData.notes,
+        attendees: formData.attendees,
+      });
+
+      alert("Reservation updated!");
+      navigate("/my-reservations");
+    } catch (err) {
+      console.log(err);
+      setError("Update failed — check times for conflicts");
+    }
   };
 
-  try {
-    await bookingService.updateBooking(id, payload);
-    toast.success("Updated!");
-    navigate("/my-reservations");
-  } catch (err) {
-    console.error("Full error:", err.response?.data);
-
-    let msg = "Failed to update.";
-    if (err.response?.data) {
-      const first = Object.values(err.response.data)[0];
-      msg = Array.isArray(first) ? first[0] : first;
-    }
-    toast.error(msg);
-  }
-};
-
-
-  if (loading) return <Spinner className="my-5" />;
-  if (!reservation) return <Alert variant="danger">Not found.</Alert>;
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   return (
-    <Container className="my-4">
-      <Card>
-        <Card.Body>
-          <h3>Edit Reservation</h3>
+    <div className="container my-5">
+      <h2>Edit Reservation</h2>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Title</Form.Label>
-            <Form.Control value={title} onChange={(e) => setTitle(e.target.value)} />
-          </Form.Group>
+      <form onSubmit={updateReservation} className="mt-4">
 
-          <Form.Group className="mb-3">
-            <Form.Label>Start Time</Form.Label>
-            <DatePicker
-              selected={startTime}
-              onChange={(d) => setStartTime(d)}
-              showTimeSelect
-              dateFormat="Pp"
-              className="form-control"
-            />
-          </Form.Group>
+        <div className="mb-3">
+          <label>Start Time</label>
+          <input
+            type="datetime-local"
+            className="form-control"
+            value={formData.start_time}
+            onChange={(e) =>
+              setFormData({ ...formData, start_time: e.target.value })
+            }
+            required
+          />
+        </div>
 
-          <Form.Group className="mb-3">
-            <Form.Label>End Time</Form.Label>
-            <DatePicker
-              selected={endTime}
-              onChange={(d) => setEndTime(d)}
-              showTimeSelect
-              dateFormat="Pp"
-              className="form-control"
-            />
-          </Form.Group>
+        <div className="mb-3">
+          <label>End Time</label>
+          <input
+            type="datetime-local"
+            className="form-control"
+            value={formData.end_time}
+            onChange={(e) =>
+              setFormData({ ...formData, end_time: e.target.value })
+            }
+            required
+          />
+        </div>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Notes</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={3}
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-            />
-          </Form.Group>
+        <div className="mb-3">
+          <label>Notes</label>
+          <textarea
+            className="form-control"
+            value={formData.notes}
+            onChange={(e) =>
+              setFormData({ ...formData, notes: e.target.value })
+            }
+          />
+        </div>
 
-          <Button onClick={save}>Save</Button>
-        </Card.Body>
-      </Card>
-    </Container>
+        <div className="mb-3">
+          <label>Attendees</label>
+          <input
+            type="number"
+            min="1"
+            className="form-control"
+            value={formData.attendees}
+            onChange={(e) =>
+              setFormData({ ...formData, attendees: Number(e.target.value) })
+            }
+            required
+          />
+        </div>
+
+        <button type="submit" className="btn btn-primary">
+          Save Changes
+        </button>
+      </form>
+    </div>
   );
 }
 

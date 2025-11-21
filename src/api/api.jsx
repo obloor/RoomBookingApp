@@ -1,47 +1,45 @@
-// src/api/api.jsx
-import axios from 'axios';
-import { BaseUrl, API_ENDPOINTS } from './constant';
+import axios from "axios";
+import { BaseUrl, API_ENDPOINTS } from "./constant";
 
-
-// Single axios instance for the entire application
 export const api = axios.create({
   baseURL: BaseUrl,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  headers: { "Content-Type": "application/json" },
   withCredentials: true,
 });
 
-// Request interceptor for adding auth token
+// Attach access token
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+  const token = localStorage.getItem("token");
+  if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
 // Handle token refresh
 api.interceptors.response.use(
-  response => response,
-  async error => {
-    const originalRequest = error.config;
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
+  (res) => res,
+  async (error) => {
+    const original = error.config;
+
+    if (error.response?.status === 401 && !original._retry) {
+      original._retry = true;
+
       try {
-        const refresh = localStorage.getItem('refresh_token');
-        const response = await axios.post(`${BaseUrl}${API_ENDPOINTS.AUTH.REFRESH}`, { refresh });
-        const { access } = response.data;
-        localStorage.setItem('token', access);
-        originalRequest.headers.Authorization = `Bearer ${access}`;
-        return api(originalRequest);
-      } catch (error) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('refresh_token');
-        window.location.href = '/login';
-        return Promise.reject(error);
+        const refresh = localStorage.getItem("refresh_token");
+        const { data } = await axios.post(
+          `${BaseUrl}${API_ENDPOINTS.AUTH.REFRESH}`,
+          { refresh }
+        );
+
+        localStorage.setItem("token", data.access);
+        original.headers.Authorization = `Bearer ${data.access}`;
+        return api(original);
+      } catch {
+        localStorage.removeItem("token");
+        localStorage.removeItem("refresh_token");
+        window.location.href = "/login";
       }
     }
+
     return Promise.reject(error);
   }
 );
@@ -52,15 +50,16 @@ export default {
     api.post(API_ENDPOINTS.AUTH.LOGIN, { username, password }),
 
   // Rooms
-  getAllRooms: () => api.get('/api/rooms/'),
-  getRoom: (id) => api.get(`/api/rooms/${id}/`),
-  checkAvailability: (roomId, startDate, endDate) =>
-    api.get(`/api/rooms/${roomId}/availability/`, {
-      params: { start_date: startDate, end_date: endDate }
-    }),
+  getAllRooms: () => api.get(API_ENDPOINTS.ROOMS.BASE),
+  getRoom: (id) => api.get(`${API_ENDPOINTS.ROOMS.BASE}${id}/`),
 
   // Reservations
-  getReservations: () => api.get('/api/reservations/'),
-  createReservation: (data) => api.post('/api/reservations/', data),
-  deleteReservation: (id) => api.delete(`/api/reservations/${id}/`),
+  getReservations: () => api.get(API_ENDPOINTS.RESERVATIONS.BASE),
+  createReservation: (data) => api.post(API_ENDPOINTS.RESERVATIONS.BASE, data),
+  deleteReservation: (id) =>
+    api.delete(`${API_ENDPOINTS.RESERVATIONS.BASE}${id}/`),
+  getReservation: (id) =>
+    api.get(`${API_ENDPOINTS.RESERVATIONS.BASE}${id}/`),
+  updateReservation: (id, data) =>
+    api.patch(`${API_ENDPOINTS.RESERVATIONS.BASE}${id}/`, data),
 };
