@@ -106,6 +106,7 @@ function RoomDetail() {
       toast.success("Room booked successfully");
       navigate("/my-reservations");
 
+
     } catch (err) {
       const raw = err.response?.data;
       let msg = raw ? Object.values(raw)[0] : "Booking failed.";
