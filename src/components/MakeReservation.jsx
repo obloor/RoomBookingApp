@@ -85,6 +85,8 @@ function MakeReservation() {
                 end_time: formatForDjango(formData.end_date),
                 attendees: formData.guests,
                 notes: formData.special_requests,
+                client: 'Anonymous User',
+                status: 'scheduled'
             };
 
             await bookingService.createBooking(payload);
