@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import { Container, Card, Form, Button, Spinner, Alert } from "react-bootstrap";
-import bookingService from "../api/bookingService";
+import { bookingService } from "../api/bookingService.jsx";
 import { toast } from "react-toastify";
 
 function EditReservation() {
