@@ -1,4 +1,4 @@
-import api from "./apiClient";  // <--- your ONE axios instance
+import { api } from './api.jsx';
 import { API_ENDPOINTS } from "./constant";
 
 export const bookingService = {
