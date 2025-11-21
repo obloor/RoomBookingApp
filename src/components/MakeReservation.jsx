@@ -5,8 +5,9 @@ import {
 } from 'react-bootstrap';
 import {FaArrowLeft, FaCheckCircle, FaTimesCircle} from 'react-icons/fa';
 
-import roomService from '../api/roomService';
-import bookingService from '../api/bookingService';
+import { roomService } from '../api/roomService.jsx';
+import { bookingService } from '../api/bookingService.js';
+
 
 function MakeReservation() {
     const navigate = useNavigate();
