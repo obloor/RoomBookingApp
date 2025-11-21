@@ -26,11 +26,11 @@ api.interceptors.response.use(
   response => response,
   async error => {
     const originalRequest = error.config;
-    if (error.response.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
         const refresh = localStorage.getItem('refresh_token');
-        const response = await axios.post(`${BaseUrl}/api/auth/jwt/refresh/`, { refresh });
+        const response = await axios.post(`${BaseUrl}${API_ENDPOINTS.AUTH.REFRESH}`, { refresh });
         const { access } = response.data;
         localStorage.setItem('token', access);
         originalRequest.headers.Authorization = `Bearer ${access}`;
