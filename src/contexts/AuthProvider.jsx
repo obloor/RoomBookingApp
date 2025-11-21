@@ -144,7 +144,7 @@ export const AuthProvider = ({ children }) => {
       setError(null);
       setLoading(true);
 
-      const loginUrl = `${BaseUrl}${API_ENDPOINTS.AUTH.LOGIN.replace('/api', '')}`;
+      const loginUrl = `${BaseUrl}${API_ENDPOINTS.AUTH.LOGIN}`;
       const response = await axios.post(loginUrl, { username, password });
       
       if (!response?.data?.access || !response?.data?.refresh) {

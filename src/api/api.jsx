@@ -48,7 +48,7 @@ api.interceptors.response.use(
 export default {
   // Auth
   login: (username, password) =>
-    api.post('/api/auth/jwt/create/', { username, password }),
+    api.post(API_ENDPOINTS.AUTH.LOGIN, { username, password }),
 
   // Rooms
   getAllRooms: () => api.get('/api/rooms/'),
