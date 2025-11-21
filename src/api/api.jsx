@@ -1,14 +1,17 @@
-// src/api/roomService.js
+// src/api/api.jsx
 import axios from 'axios';
 import { BaseUrl, API_ENDPOINTS } from './constant';
 
-const api = axios.create({
+// Single axios instance for the entire application
+export const api = axios.create({
   baseURL: BaseUrl,
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
 });
 
+// Request interceptor for adding auth token
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {

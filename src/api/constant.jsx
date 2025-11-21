@@ -3,21 +3,17 @@ export const BaseUrl = "https://reservation-app-sepia.vercel.app";
 
 // API Endpoints
 export const API_ENDPOINTS = {
-  AUTH: {
-    LOGIN: '/api/auth/jwt/create/',
-    REFRESH: '/api/auth/jwt/refresh/',
-    REGISTER: '/api/register/',
-    ME: '/api/users/me/',
-  },
   ROOMS: {
-    BASE: '/api/rooms/',
-    AVAILABILITY: '/api/rooms/availability/',
+    BASE: "/api/rooms/",
   },
-  BOOKINGS: {
-    BASE: '/api/reservations/',
-    MY_BOOKINGS: '/api/reservations/my/',
-  },
+  AUTH: {
+    LOGIN: "/api/auth/jwt/create/",
+    REFRESH: "/api/auth/jwt/refresh/",
+    REGISTER: "/api/register/",
+    ME: "/api/users/me/",
+  }
 };
+
 
 // Meeting room features
 export const ROOM_FEATURES = [

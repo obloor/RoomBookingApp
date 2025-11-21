@@ -1,2 +1,2 @@
-export const BaseUrl = "https://reservation-app-sepia.vercel.app/api";
+export const BaseUrl = "https://reservation-app-sepia.vercel.app";
 
