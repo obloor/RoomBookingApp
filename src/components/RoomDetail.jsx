@@ -95,7 +95,7 @@ function RoomDetail() {
 
     try {
       await bookingService.createBooking({
-        room_id: Number(id),
+        room: Number(id),
         title: booking.title.trim(),
         notes: booking.purpose.trim(),
         attendees: booking.attendees,
